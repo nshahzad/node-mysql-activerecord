@@ -30,7 +30,7 @@
  * 
 **/ 
 
-exports.Adapter = function(settings) {
+exports.Adapter = function(settings, callback) {
 	
 	var mysql = require('mysql');
 
@@ -50,12 +50,20 @@ exports.Adapter = function(settings) {
 		throw new Error('Unable to start ActiveRecord - no database given.');
 	}
 	
-	var connection = new mysql.createClient({
+	var connection = mysql.createConnection({
 		host: settings.server,
 		port: settings.port,
 		user: settings.username,
 		password: settings.password,
 		database: settings.database
+	});
+
+	connection.connect(function(err) {
+		if(err) {
+			return callback(err, null);
+		}
+
+		callback(null);
 	});
 	
 	if (settings.charset) {
