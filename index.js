@@ -59,6 +59,10 @@ exports.Adapter = function(settings, callback) {
 	});
 
 	connection.connect(function(err) {
+		if(typeof(callback) !== 'function') {
+			return;
+		}
+
 		if(err) {
 			return callback(err, null);
 		}
